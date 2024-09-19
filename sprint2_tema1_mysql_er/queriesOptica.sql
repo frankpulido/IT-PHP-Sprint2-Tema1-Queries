@@ -23,3 +23,6 @@ SELECT su.commercial_name AS 'proveedor', subquery.quantity AS 'TOP 1 record uni
 
 -- 6- Listar el proveedores que ha suministrado las gafas TOP VENTAS en euros.
 SELECT su.commercial_name AS 'proveedor', subquery.ventas AS 'TOP 1 record ventas €' FROM suppliers su JOIN (SELECT p.id_supplier AS 'supplier', SUM(si.quantity * si.price) AS 'ventas' FROM products p JOIN sale_items si ON p.id_product = si.id_product GROUP BY p.id_supplier) AS subquery ON su.id_supplier = subquery.supplier ORDER BY subquery.ventas DESC LIMIT 1;
+
+-- 7- Listar total de REFERRALS hechos por clientes existentes (efecto "word of mouth").
+SELECT c.last_name1, c.last_name2, c.first_name, COUNT(r.being_referred_by_nif) AS 'total referrals' FROM customers c JOIN referrals r ON c.customer_nif = r.being_referred_by_nif GROUP BY c.id_customer ORDER BY c.last_name1 ASC, c.last_name2 ASC, c.first_name ASC;
