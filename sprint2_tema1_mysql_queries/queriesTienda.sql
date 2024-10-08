@@ -36,10 +36,12 @@ SELECT `nombre`, ROUND(`precio`) FROM producto;
 SELECT `nombre`, TRUNCATE(`precio`,0) FROM producto;
 
 // 11- Listar el código de los fabricantes de la Tabla Producto que tienen productos en la Tabla Producto
-SELECT fabricante.codigo FROM fabricante INNER JOIN producto WHERE fabricante.codigo = producto.codigo_fabricante;
+// ANTES DE LA CORRECCIÓN : SELECT fabricante.codigo FROM fabricante INNER JOIN producto WHERE fabricante.codigo = producto.codigo_fabricante;
+SELECT producto.codigo_fabricante FROM producto;
 
 // 12- Listar el código de los fabricantes de la Tabla Producto que tienen productos en la Tabla Producto, evitando repetir códigos
-SELECT fabricante.codigo FROM fabricante INNER JOIN producto WHERE fabricante.codigo = producto.codigo_fabricante GROUP BY fabricante.codigo; 
+// ANTES DE LA CORRECCIÓN : SELECT fabricante.codigo FROM fabricante INNER JOIN producto WHERE fabricante.codigo = producto.codigo_fabricante GROUP BY fabricante.codigo; 
+SELECT producto.codigo_fabricante FROM producto GROUP BY producto.codigo_fabricante;
 
 // 13- Listar los nombres de los fabricantes ordenados de forma ascendente
 SELECT * FROM fabricante ORDER BY `nombre`;
@@ -57,7 +59,6 @@ NO FUNCIONA (usa el primer ORDER BY para ambas columnas) : SELECT `nombre` AS `q
 UNION ALL (no funciona) : (SELECT `nombre` AS `query 1` FROM tienda.producto ORDER BY `nombre`) UNION ALL (SELECT `nombre` AS `query 2` FROM tienda.producto ORDER BY `precio` DESC);
 */
 
-
 // 16- Retornar una lista con las 5 primeras filas de la Tabla Fabricante.
 SELECT * FROM fabricante LIMIT 5;
 
@@ -72,6 +73,7 @@ SELECT `nombre`, `precio` FROM producto ORDER BY `precio` DESC LIMIT 1;
 
 // 20- Listar el nombre de todos los productos de la Tabla Producto cuyo código de fabricante es igual a 2
 SELECT * FROM producto WHERE `codigo_fabricante` IN(2);
+// podía haber hecho "codigo_fabricante" = 2, pero no habría usado IN en ningún query...
 
 // 21- Retornar un listado con todos los nombres de producto, precio y nombre del fabricante de la Tabla Productos.
 SELECT p.nombre, p.precio, f.nombre AS fabricante FROM producto p LEFT JOIN fabricante f ON p.codigo_fabricante = f.codigo;
@@ -125,7 +127,7 @@ SELECT p.nombre FROM producto p LEFT JOIN fabricante f ON p.codigo_fabricante = 
 // 37- Retorna un listado con todos los datos de los productos que tienen el mismo precio que el producto más caro del fabricante Lenovo. (Sin utilizar INNER JOIN).
 SELECT * FROM producto p LEFT JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre != "Lenovo" AND p.precio = (SELECT MAX(p1.precio) FROM producto p1 LEFT JOIN fabricante f1 ON p1.codigo_fabricante = f1.codigo WHERE f1.nombre = "Lenovo");
 /*
-NO FUNCIONA : SELECT * FROM producto p LEFT JOIN fabricante f ON p.codigo_fabricante = f.codigo WHERE f.nombre != "Lenovo" AND f.precio = (MAXVALUE(f.precio) AND (f.nombre = "Lenovo");
+FUNCIONA : Es necesario modificar algún precio de los otros productos (precio = 559) para conseguir un output 
 */
 
 // 38- Retorna el producto más caro del fabricante Lenovo.
