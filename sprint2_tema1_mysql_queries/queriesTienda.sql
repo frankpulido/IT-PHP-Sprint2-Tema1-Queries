@@ -41,7 +41,7 @@ SELECT producto.codigo_fabricante FROM producto;
 
 // 12- Listar el código de los fabricantes de la Tabla Producto que tienen productos en la Tabla Producto, evitando repetir códigos
 // ANTES DE LA CORRECCIÓN : SELECT fabricante.codigo FROM fabricante INNER JOIN producto WHERE fabricante.codigo = producto.codigo_fabricante GROUP BY fabricante.codigo; 
-SELECT producto.codigo_fabricante FROM producto GROUP BY producto.codigo_fabricante;
+SELECT DISTINCT fabricante.codigo FROM fabricante INNER JOIN producto WHERE fabricante.codigo = producto.codigo_fabricante;
 
 // 13- Listar los nombres de los fabricantes ordenados de forma ascendente
 SELECT * FROM fabricante ORDER BY `nombre`;
@@ -49,12 +49,20 @@ SELECT * FROM fabricante ORDER BY `nombre`;
 // 14- Listar los nombres de los fabricantes ordenados de forma descendente
 SELECT * FROM fabricante ORDER BY `nombre` DESC;
 
-// 15- Listar los nombres de los productos en 2 columnas, la primera en orden alfabético ascendente, la segunda en orden de precio descendente
+// 15- Listar los nombres de TODOS los productos ordenados por nombre ascendente y precio descendiente.
+SELECT nombre FROM producto ORDER BY nombre ASC, precio DESC;
+
+// 15- EXTRA MILE - Listar los nombres de los productos en 2 columnas, la primera en orden alfabético ascendente, la segunda en orden de precio descendente
 /* Casi lo he conseguido, pero debo mantener sólo la primera ocurrencia de cada valor de la columna 1 (query1). GROUP BY query1.nombre NO FUNCIONA : */
 SELECT query1.nombre AS orderAZ , query2.nombre AS orderPriceDesc FROM producto query1 CROSS JOIN producto query2 ORDER BY query1.nombre ASC, query2.precio DESC;
 
-/* SELF JOIN : https://www.youtube.com/watch?v=7S_tz1z_5bA
-IR A MINUTO : 1:33:00
+SELECT query1.orderAZ, query2.orderPriceDesc FROM (SELECT p.nombre AS 'orderAZ' FROM producto p ORDER BY p.nombre) AS query1 JOIN (SELECT producto p AS 'orderPriceDesc' FROM producto p ORDER BY p.precio DESC) AS query2 ON ;
+
+SELECT query1.orderAZ, query2.orderPriceDesc FROM (SELECT p1.nombre AS 'orderAZ', p1.codigo_fabricante AS 'fabricante' FROM producto p1 ORDER BY p1.nombre) AS query1 JOIN (SELECT p2.nombre AS 'orderPriceDesc', p2.codigo_fabricante AS 'fabricante' FROM producto p2 ORDER BY p2.precio DESC) AS query2 ON query1.fabricante = query2.fabricante;
+
+/*
+SELF JOIN : https://youtu.be/7S_tz1z_5bA?si=PfkWoHdLohM6W8e-&t=5772
+SELF OUTER JOIN : https://youtu.be/7S_tz1z_5bA?si=GCOTp4rbEd49aKEh&t=7560
 NO FUNCIONA (usa el primer ORDER BY para ambas columnas) : SELECT `nombre` AS `query 1` , `nombre` AS `query 2` FROM producto ORDER BY `nombre` ASC, `precio` DESC;
 UNION ALL (no funciona) : (SELECT `nombre` AS `query 1` FROM tienda.producto ORDER BY `nombre`) UNION ALL (SELECT `nombre` AS `query 2` FROM tienda.producto ORDER BY `precio` DESC);
 */
