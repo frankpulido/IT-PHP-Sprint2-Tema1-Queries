@@ -1,4 +1,4 @@
-USE schema_pizzeria;
+USE pizzeria;
 
 -- 1- Mostrar cuantos productos de tipo "drink" se han vendido en cada localidad (postal code customer).
 SELECT c.customer_postalcode, SUM(subquery2.quantity) AS 'total beverages sold in CP' FROM customers c JOIN (SELECT o.customer_id, subquery1.quantity FROM orders o JOIN (SELECT oi.order_id, oi.quantity AS quantity FROM order_items oi JOIN products p ON oi.id_product = p.id_product WHERE p.product_type IN('drink')) AS subquery1 ON o.id_order = subquery1.order_id) AS subquery2 ON c.id_customer = subquery2.customer_id GROUP BY customer_postalcode ORDER BY c.customer_postalcode ASC;

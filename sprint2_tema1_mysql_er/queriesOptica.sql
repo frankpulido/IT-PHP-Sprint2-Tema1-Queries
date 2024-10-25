@@ -1,4 +1,4 @@
-USE schema_optica;
+USE optica;
 
 -- 1- Record de compras histórico (total) de todos los clientes ordenado por Cliente ASC (apellido 1, apellido 2, nombre).
 SELECT c.last_name1 AS 'apellido 1', c.last_name2 AS 'apellido 2', c.first_name AS 'nombre', SUM(s.total_sale) AS 'total ventas € por cliente' FROM sales s JOIN customers c ON s.id_customer = c.id_customer GROUP BY c.id_customer ORDER BY c.last_name1, c.last_name2, c.first_name;
